@@ -9,5 +9,5 @@ class InviteForm(Form):
     email = StringField(label='Email', validators=[DataRequired(), Length(max=30), Email()])
 
     def validate_email(self, field):
-        from app.auth.models import User
+        # from app.auth.models import User
         raise validators.ValidationError('Email already used.')

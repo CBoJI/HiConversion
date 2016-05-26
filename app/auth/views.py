@@ -4,8 +4,10 @@ from datetime import datetime
 
 from flask import render_template, redirect, url_for, Blueprint, request
 from flask.ext.login import login_user, logout_user, login_required, current_user
+from flask_mail import Message
 from forms import LoginForm
 from models import User
+from app.extensions import custom_mail
 
 auth = Blueprint('auth', __name__)
 
