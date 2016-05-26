@@ -1,0 +1,11 @@
+{% extends 'admin/base.html' %}
+
+{% block access_control %}
+    {% if current_user.is_authenticated %}
+        <ul class="nav navbar-nav navbar-right">
+            <li>
+                <a href="/"><span class="glyphicon glyphicon-home"></span>  Home</a>
+            </li>
+        </ul>
+    {% endif %}
+{% endblock %}

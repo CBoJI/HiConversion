@@ -1,5 +1,4 @@
 # encoding: utf-8
-# encoding: utf-8
 
 from flask_wtf import Form
 from wtforms import StringField, validators
@@ -21,5 +20,5 @@ class ConsoleRegisterForm(LoginForm):
             raise validators.ValidationError('User already exists.')
 
     def validate_csrf_token(self, field):
-        """Disable csrf validation for possibility to use if from console"""
+        """Disable csrf validation for possibility to use this form from console by manage.py"""
         pass
