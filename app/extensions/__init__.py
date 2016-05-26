@@ -3,7 +3,13 @@
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 
-login_manager = LoginManager()
-db = SQLAlchemy()
+from app.admin import CustomAdmin
 
-extensions = [login_manager, db, ]
+login_manager = LoginManager()
+login_manager.session_protection = 'strong'
+login_manager.login_view = 'auth.login'
+
+db = SQLAlchemy()
+custom_admin = CustomAdmin(db=db)
+
+extensions_list = [login_manager, db, custom_admin, ]

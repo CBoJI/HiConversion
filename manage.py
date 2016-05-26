@@ -7,7 +7,7 @@ from flask_migrate import Migrate, MigrateCommand
 
 from app.extensions import db
 from app import create_app
-from app.main.models import User
+from app.auth.models import User
 
 app = create_app(os.getenv('FLASK_CONFIG') or 'default')
 

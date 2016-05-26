@@ -3,8 +3,8 @@
 from flask import Flask
 
 from config import config
-from extensions import extensions
-from main import main_blueprint
+from extensions import extensions_list
+from auth import auth_blueprint
 
 
 def create_app(config_name):
@@ -12,9 +12,9 @@ def create_app(config_name):
     app.config.from_object(config[config_name])
     config[config_name].init_app(app)
 
-    for ext in extensions:
+    for ext in extensions_list:
         ext.init_app(app)
 
-    app.register_blueprint(main_blueprint)
+    app.register_blueprint(auth_blueprint)
 
     return app

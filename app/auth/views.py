@@ -5,10 +5,10 @@ from flask import render_template, redirect, url_for, Blueprint
 from forms import LoginForm
 from models import User
 
-main = Blueprint('main', __name__)
+auth = Blueprint('auth', __name__)
 
 
-@main.route('/', methods=['GET', 'POST'])
+@auth.route('/', methods=['GET', 'POST'])
 def index_view():
     form = LoginForm()
     if form.validate_on_submit():  # valid form passed by POST method
@@ -20,6 +20,6 @@ def index_view():
     return render_template('login.html', form=form)
 
 
-@main.route('/logout')
+@auth.route('/logout')
 def logout_view():
     return render_template('logout.html')
