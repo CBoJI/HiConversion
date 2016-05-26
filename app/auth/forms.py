@@ -2,8 +2,10 @@
 # encoding: utf-8
 
 from flask_wtf import Form
-from wtforms import StringField
+from wtforms import StringField, validators
 from wtforms.validators import DataRequired, Email, Length
+
+from models import User
 
 
 class LoginForm(Form):
@@ -11,5 +13,13 @@ class LoginForm(Form):
     password = StringField(label='Password', validators=[DataRequired(), Length(max=60)])
 
 
-# class RegisterForm(LoginForm):
-#     repeat_password = StringField(label='repeat password', validators=[DataRequired(), Length(max=60)])
+class ConsoleRegisterForm(LoginForm):
+
+    def validate_login(self, field):
+        user = User.query.filter_by(login=self.login.data).first()
+        if user is not None:
+            raise validators.ValidationError('User already exists.')
+
+    def validate_csrf_token(self, field):
+        """Disable csrf validation for possibility to use if from console"""
+        pass

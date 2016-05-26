@@ -1,13 +1,12 @@
 # encoding: utf-8
 
 from datetime import datetime
-
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.ext.declarative import declared_attr
-from flask_login import UserMixin
+from flask_login import UserMixin, AnonymousUserMixin
 import inflection
 
-from app.extensions import db
+from app.extensions import db, login_manager
 
 
 class CRUDMixin(object):
@@ -69,11 +68,19 @@ class User(UserMixin, CRUDMixin, db.Model):
     def hash_password(password):
         return generate_password_hash(password)
 
+    def verify_password(self, password):
+        return check_password_hash(self.password, password)
+
     @staticmethod
-    def set_admin(password):
-        admin = User.query.filter_by(login='admin').first()
+    def set_admin(login, password):
+        admin = User.query.filter_by(login=login).first()
         if admin:
             admin.update(password=User.hash_password(password), admin=True)
         else:
-            User.create(login='admin', password=User.hash_password(password),
+            User.create(login=login, password=User.hash_password(password),
                         created_at=datetime.now(), admin=True)
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))

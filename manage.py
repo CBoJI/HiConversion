@@ -8,6 +8,7 @@ from flask_migrate import Migrate, MigrateCommand
 from app.extensions import db
 from app import create_app
 from app.auth.models import User
+from app.auth.forms import ConsoleRegisterForm
 
 app = create_app(os.getenv('FLASK_CONFIG') or 'default')
 
@@ -18,15 +19,20 @@ manager.add_command('db', MigrateCommand)
 
 
 @manager.command
-def set_admin(password):
+def set_admin(login, password):
     """
-    Creates new user (login=admin) or updates its password
+    Creates new user (login=<email>) or updates its password
     """
 
-    try:
-        User.set_admin(password)
-    except Exception, e:
-        print e
+    form = ConsoleRegisterForm(login=login, password=password)
+    if form.validate():
+        try:
+            User.set_admin(login, password)
+            print 'Admin-user created (%s)' % login
+        except Exception, e:
+            print e
+    else:
+        print form.errors
 
 if __name__ == '__main__':
     manager.run()

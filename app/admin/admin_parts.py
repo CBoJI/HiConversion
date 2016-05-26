@@ -9,12 +9,11 @@ from flask_admin.contrib.sqla import ModelView
 class AccessMIXIN(object):
 
     def is_accessible(self):
-        return True
         return current_user.is_authenticated and current_user.admin
 
     def inaccessible_callback(self, name, **kwargs):
         # redirect to login page if user doesn't have access
-        return redirect(url_for('main.index_view'))
+        return redirect(url_for('auth.login_view'))
 
 
 class AppAdminIndexView(AccessMIXIN, AdminIndexView):
@@ -25,3 +24,5 @@ class AppAdminIndexView(AccessMIXIN, AdminIndexView):
 class AdminUser(AccessMIXIN, ModelView):
     form_excluded_columns = ('password', )
     column_exclude_list = ('password', )
+
+    can_create = False
