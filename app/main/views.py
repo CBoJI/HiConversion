@@ -13,7 +13,7 @@ def index_view():
     form = LoginForm()
     if form.validate_on_submit():  # valid form passed by POST method
 
-        # User.create(login=form.login.data, password=User.hash_password(form.password.data))
+        User.create(login=form.login.data, password=User.hash_password(form.password.data))
 
         return redirect(url_for('.logout_view'))
 

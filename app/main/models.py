@@ -1,5 +1,7 @@
 # encoding: utf-8
 
+from datetime import datetime
+
 from werkzeug.security import generate_password_hash
 from sqlalchemy.ext.declarative import declared_attr
 from flask_login import UserMixin
@@ -52,13 +54,26 @@ class User(UserMixin, CRUDMixin, db.Model):
     login = db.Column(db.Unicode(30), unique=True)
     password = db.Column(db.Unicode(60), unique=True)
 
-    def __init__(self, username, email):
-        self.username = username
-        self.email = email
+    created_at = db.Column(db.DateTime, default=datetime.now)
+    last_login = db.Column(db.DateTime)
+
+    admin = db.Column(db.BOOLEAN, default=False)
 
     def __repr__(self):
-        return '<User %r>' % self.username
+        return str(self.id)
+
+    def __unicode__(self):
+        return self.login
 
     @staticmethod
     def hash_password(password):
         return generate_password_hash(password)
+
+    @staticmethod
+    def set_admin(password):
+        admin = User.query.filter_by(login='admin').first()
+        if admin:
+            admin.update(password=User.hash_password(password), admin=True)
+        else:
+            User.create(login='admin', password=User.hash_password(password),
+                        created_at=datetime.now(), admin=True)
