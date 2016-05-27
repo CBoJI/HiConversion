@@ -50,6 +50,7 @@ class CRUDMixin(object):
 
 
 class User(UserMixin, CRUDMixin, db.Model):
+    # email uses as login
     login = db.Column(db.Unicode(30), unique=True)
     password = db.Column(db.Unicode(60), unique=True)
 
@@ -79,6 +80,24 @@ class User(UserMixin, CRUDMixin, db.Model):
         else:
             User.create(login=login, password=User.hash_password(password),
                         created_at=datetime.now(), admin=True)
+
+
+class Invite(UserMixin, CRUDMixin, db.Model):
+    invite = db.Column(db.Unicode(30), unique=True)
+    email = db.Column(db.Unicode(30), unique=False)  # invite can be sent many times to one email
+    created_at = db.Column(db.DateTime, default=datetime.now)
+
+    def __repr__(self):
+        return str(self.id)
+
+    def __unicode__(self):
+        return self.email
+
+    @staticmethod
+    def create_invite(email):
+        from uuid import uuid4
+        invite_str = str(uuid4())
+        return Invite.create(invite=invite_str, email=email, created_at=datetime.now())
 
 
 @login_manager.user_loader

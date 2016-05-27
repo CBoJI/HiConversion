@@ -8,7 +8,7 @@
         })
         .done(function(data) {
             if (data.status == 'ok'){
-                alert( "Invite processed." );
+                alert( "Invite sent." );
             } else {
                 alert( "Error! \n " + JSON.stringify(data, null, 4) );
             }

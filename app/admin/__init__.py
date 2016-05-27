@@ -16,5 +16,6 @@ class CustomAdmin(Admin):
         })
         super(self.__class__, self).__init__(**kwargs)
 
-        from app.auth.models import User
+        from app.auth.models import User, Invite
         self.add_view(ap.AdminUser(User, self.db.session))
+        self.add_view(ap.AdminInvite(Invite, self.db.session))
