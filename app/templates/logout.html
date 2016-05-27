@@ -1,8 +1,10 @@
 {% extends 'login.html' %}
 
 {% block content %}
-    <h2 class="form-signin-heading">You can go to control panel</h2>
-    <a class="btn btn-lg btn-danger btn-block" href="/admin" role="button">Control panel</a>
+    {% if admin  %}
+        <h2 class="form-signin-heading">You can go to control panel</h2>
+        <a class="btn btn-lg btn-danger btn-block" href="/admin" role="button">Control panel</a>
+    {% endif %}
 
     <h2 class="form-signin-heading">You can logout</h2>
     <button class="btn btn-lg btn-primary btn-block" type="submit">Logout</button>

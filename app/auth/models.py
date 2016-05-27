@@ -1,12 +1,14 @@
 # encoding: utf-8
 
+import random
+import string
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.ext.declarative import declared_attr
 from flask_login import UserMixin, AnonymousUserMixin
 import inflection
 
-from app.extensions import db, login_manager
+from app.extensions import db, login_manager, mail
 
 
 class CRUDMixin(object):
@@ -53,6 +55,7 @@ class User(UserMixin, CRUDMixin, db.Model):
     # email uses as login
     login = db.Column(db.Unicode(30), unique=True)
     password = db.Column(db.Unicode(60), unique=True)
+    invite = db.Column(db.Unicode(36), unique=True)
 
     created_at = db.Column(db.DateTime, default=datetime.now)
     last_login = db.Column(db.DateTime)
@@ -73,6 +76,25 @@ class User(UserMixin, CRUDMixin, db.Model):
         return check_password_hash(self.password, password)
 
     @staticmethod
+    def generate_password(n=8):
+        """
+        Generate random password of n characters.
+        :param n: number of characters.
+        """
+        return ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(n))
+
+    @staticmethod
+    def create_user(email, invite_str):
+        password = User.generate_password()
+        user = User.create(login=email,
+                           password=User.hash_password(password),
+                           invite=invite_str,
+                           created_at=datetime.now())
+
+        mail.send_login_info(email, password)
+        return user
+
+    @staticmethod
     def set_admin(login, password):
         admin = User.query.filter_by(login=login).first()
         if admin:
@@ -83,9 +105,11 @@ class User(UserMixin, CRUDMixin, db.Model):
 
 
 class Invite(UserMixin, CRUDMixin, db.Model):
-    invite = db.Column(db.Unicode(30), unique=True)
+    invite = db.Column(db.Unicode(36), unique=True)
     email = db.Column(db.Unicode(30), unique=False)  # invite can be sent many times to one email
+
     created_at = db.Column(db.DateTime, default=datetime.now)
+    used = db.Column(db.BOOLEAN, default=False)
 
     def __repr__(self):
         return str(self.id)

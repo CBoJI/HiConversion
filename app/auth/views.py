@@ -4,10 +4,9 @@ from datetime import datetime
 
 from flask import render_template, redirect, url_for, Blueprint, request
 from flask.ext.login import login_user, logout_user, login_required, current_user
-from flask_mail import Message
 from forms import LoginForm
 from models import User
-from app.extensions import custom_mail
+from decorators import get_email
 
 auth = Blueprint('auth', __name__)
 
@@ -15,7 +14,7 @@ auth = Blueprint('auth', __name__)
 @auth.route('/', methods=['GET', 'POST'])
 def login_view():
     if current_user.is_authenticated:
-        return render_template('logout.html', url='logout')
+        return render_template('logout.html', url='logout', admin=current_user.admin)
         # return redirect(url_for('.logout_view'))
 
     form = LoginForm()
@@ -36,4 +35,14 @@ def login_view():
 @auth.route('/logout', methods=['POST', ])
 def logout_view():
     logout_user()
+    return redirect(url_for('.login_view'))
+
+
+@auth.route('/invite/<invite_str>/')
+@get_email
+def invite_view(invite_str, email):
+    from app.auth.models import User
+    user = User.create_user(email, invite_str)
+    login_user(user)
+    user.update(last_login=datetime.now())
     return redirect(url_for('.login_view'))
