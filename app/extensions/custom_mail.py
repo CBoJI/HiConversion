@@ -13,16 +13,17 @@ class CustomMail(Mail):
         Actually it prints it out to the console.
         :param message: a Message instance.
         """
-        print '*' * 80
-        print message
-        print '*' * 80
+        if not current_app.config['TESTING']:
+            print '*' * 80
+            print message
+            print '*' * 80
 
     def send_invite(self, email):
 
         from app.auth.models import Invite
         inv = Invite.create_invite(email)
         msg = Message("Hello",
-                      body='testing\n invite: %s' % inv.invite,
+                      body='Invite!\n http://<domain.com>/invite/%s' % inv.invite,
                       sender="no-replay@example.com",
                       recipients=[email, ])
 
@@ -30,7 +31,7 @@ class CustomMail(Mail):
 
     def send_login_info(self, email, password):
         msg = Message("Hello",
-                      body='testing\n login: %s\n password: %s' % (email, password),
+                      body='Your invite have been accepted.\n login: %s\n password: %s' % (email, password),
                       sender="no-replay@example.com",
                       recipients=[email, ])
 

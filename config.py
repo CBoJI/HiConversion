@@ -50,7 +50,7 @@ class TestingConfig(BaseConfig):
     # Enable testing mode
     TESTING = True
 
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(BASE_DIR, 'dev_data.sqlite')
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(BASE_DIR, 'test_data.sqlite')
     WTF_CSRF_ENABLED = False
 
 

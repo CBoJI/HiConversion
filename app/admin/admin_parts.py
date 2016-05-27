@@ -33,7 +33,7 @@ class AppAdminIndexView(AccessMIXIN, AdminIndexView):
                 if mail.send_invite(form.email.data):
                     return jsonify({'status': 'ok'})
 
-                return jsonify(form.errors)
+            return jsonify(form.errors)
 
 
 class AdminUser(AccessMIXIN, ModelView):

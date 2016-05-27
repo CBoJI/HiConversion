@@ -120,8 +120,8 @@ class Invite(UserMixin, CRUDMixin, db.Model):
     @staticmethod
     def create_invite(email):
         from uuid import uuid4
-        invite_str = str(uuid4())
-        return Invite.create(invite=invite_str, email=email, created_at=datetime.now())
+        invite_str = unicode(uuid4())
+        return Invite.create(invite=invite_str, email=email)
 
 
 @login_manager.user_loader
