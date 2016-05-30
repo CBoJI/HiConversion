@@ -2,6 +2,7 @@
 
 import random
 import string
+from uuid import uuid4
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.ext.declarative import declared_attr
@@ -120,7 +121,6 @@ class Invite(UserMixin, CRUDMixin, db.Model):
 
     @staticmethod
     def create_invite(email):
-        from uuid import uuid4
         invite_str = unicode(uuid4())
         return Invite.create(invite=invite_str, email=email)
 
