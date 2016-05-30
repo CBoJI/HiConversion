@@ -128,11 +128,11 @@ class FlaskClientTestCase(unittest.TestCase):
         self.assertFalse(Invite.query.filter_by(email=u'wrong@mail.ru').first())
 
     def test_post_invite_view_405(self):
-        response = response = self.client.post(url_for('auth.invite_view', invite_str='asfas'), follow_redirects=True)
+        response = self.client.post(url_for('auth.invite_view', invite_str='asfas'), follow_redirects=True)
         self.assertTrue(response.status_code == 405)
 
     def test_get_invite_view_404(self):
-        response = response = self.client.get(url_for('auth.invite_view', invite_str='asfas'), follow_redirects=True)
+        response = self.client.get(url_for('auth.invite_view', invite_str='asfas'), follow_redirects=True)
         self.assertTrue(response.status_code == 404)
 
     def test_access_invite_view_with_real_invite(self):
@@ -144,6 +144,15 @@ class FlaskClientTestCase(unittest.TestCase):
 
         u = User.query.filter_by(invite=self.invite_str).first()
         self.assertTrue(u.login == self.invite_email)
+
+    def test_not_reusable_invite(self):
+        # invite cannot be accessed twice
+
+        # use invite fot the first time
+        self.client.get(url_for('auth.invite_view', invite_str=self.invite_str), follow_redirects=True)
+
+        response = self.client.get(url_for('auth.invite_view', invite_str=self.invite_str), follow_redirects=True)
+        self.assertTrue(response.status_code == 404)
 
     def test_new_user_email(self):
         self.client.get(url_for('auth.invite_view', invite_str=self.invite_str), follow_redirects=True)
@@ -162,18 +171,18 @@ class FlaskClientTestCase(unittest.TestCase):
     def test_logout_post_405(self):
         # get method now allowed for logout view
         response = self.client.post(url_for('auth.logout_view'), follow_redirects=True)
-        self.assertTrue('Please sign in' in response.data, response.data)
+        self.assertTrue(response.status_code == 405)
 
         self.login_as_admin()
         response = self.client.post(url_for('auth.logout_view'), follow_redirects=True)
-        self.assertTrue('Please sign in' in response.data, response.data)
+        self.assertTrue('Please sign in' in response.data)
 
     def test_admin_logout(self):
         self.login_as_admin()
         response = self.client.post(url_for('auth.logout_view'), follow_redirects=True)
-        self.assertTrue('Please sign in' in response.data, response.data)
+        self.assertTrue('Please sign in' in response.data)
 
     def test_user_logout(self):
         self.client.get(url_for('auth.invite_view', invite_str=self.invite_str), follow_redirects=True)
         response = self.client.post(url_for('auth.logout_view'), follow_redirects=True)
-        self.assertTrue('Please sign in' in response.data, response.data)
+        self.assertTrue('Please sign in' in response.data)
