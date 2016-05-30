@@ -170,8 +170,8 @@ class FlaskClientTestCase(unittest.TestCase):
 
     def test_logout_post_405(self):
         # get method now allowed for logout view
-        response = self.client.post(url_for('auth.logout_view'), follow_redirects=True)
-        self.assertTrue(response.status_code == 405)
+        response = self.client.get(url_for('auth.logout_view'), follow_redirects=True)
+        self.assertTrue(response.status_code == 405, response.status_code)
 
         self.login_as_admin()
         response = self.client.post(url_for('auth.logout_view'), follow_redirects=True)

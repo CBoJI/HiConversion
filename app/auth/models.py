@@ -53,8 +53,8 @@ class CRUDMixin(object):
 
 class User(UserMixin, CRUDMixin, db.Model):
     # email uses as login
-    login = db.Column(db.Unicode(30), unique=True)
-    password = db.Column(db.Unicode(60), unique=True)
+    login = db.Column(db.Unicode(30), unique=True, nullable=False)
+    password = db.Column(db.Unicode(60), unique=True, nullable=False)
     invite = db.Column(db.Unicode(36), unique=True)
 
     created_at = db.Column(db.DateTime, default=datetime.now)
@@ -106,8 +106,8 @@ class User(UserMixin, CRUDMixin, db.Model):
 
 
 class Invite(UserMixin, CRUDMixin, db.Model):
-    invite = db.Column(db.Unicode(36), unique=True)
-    email = db.Column(db.Unicode(30), unique=False)  # invite can be sent many times to one email
+    invite = db.Column(db.Unicode(36), unique=True, nullable=False)
+    email = db.Column(db.Unicode(30), unique=False, nullable=False)  # invite can be sent many times to one email
 
     created_at = db.Column(db.DateTime, default=datetime.now)
     used = db.Column(db.BOOLEAN, default=False)
