@@ -43,7 +43,7 @@ python manage.py set_admin admin@admin.ru 123
 export FLASK_CONFIG=production
 python manage.py runserver -h 0.0.0.0 -p 5005
 ```
-После развертывния проекта заходим на http://<host>:5005/ - страницы аутентификации. http://<host>:5005/admin - админка сервиса, которая доступна только для админов.
+После развертывния проекта заходим на http://host:5005/ - страницы аутентификации. http://host:5005/admin - админка сервиса, которая доступна только для админов.
 
 ### Комментарии:
 1) В данном задании использется консольный email-backend, который, конечно, не будет использоваться в настоящем сервере. В связи с этим в качестве модуля для отправки писем используется Flask-Mail, но для отправки писем в консоль используется [потомок класса Mail], в котором переопределены методы для данной задачи.
@@ -62,3 +62,9 @@ python manage.py runserver -h 0.0.0.0 -p 5005
    - клиент-серверная БД, например, PostgreSql
    
     Если говорить о высоконагруженном сервисе, то опять-таки надо более четко представлять бизнес-процессы, и тогда часть функционала, отвечающую за генерацию инвайта, отправку письма, вынести в очередь задач (например, Celery), возможно, сам сервис переписать на асиннхронный (twisted или asyncio).
+    
+[потомок класса Mail]: <https://github.com/CBoJI/HiConversion/blob/master/app/extensions/custom_mail.py>
+[таблицы пользователей и инвайтов]: <https://github.com/CBoJI/HiConversion/blob/master/app/auth/models.py#L54>
+[uuid4]: <https://github.com/CBoJI/HiConversion/blob/master/app/auth/models.py#L122>
+[JWT]: <https://jwt.io/>
+[backend]: <https://github.com/CBoJI/HiConversion/blob/master/app/auth/forms.py>
