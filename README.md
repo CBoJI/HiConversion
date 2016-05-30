@@ -26,7 +26,20 @@ pip install -r requirements.txt
 ```
 python manage.py test
 ```
-Если все тесты прошли удачно, то запускаем проект
+Если все тесты прошли удачно, то развертываем проект:
+
+- Создаем базу
 ```
+python manage.py db upgrade
+```
+- Создаем пользователя с админскими правами
+    ```login: admin@admin.ru```
+    ```password: 123```
+```
+python manage.py set_admin admin@admin.ru 123
+```
+- Запускаем проект
+```
+export FLASK_CONFIG=production
 python manage.py runserver -h 0.0.0.0 -p 5005
 ```
