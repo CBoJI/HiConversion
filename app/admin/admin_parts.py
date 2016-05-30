@@ -5,6 +5,7 @@ from flask_admin import AdminIndexView, expose
 from flask_admin.contrib.sqla import ModelView
 from flask_login import current_user
 
+from admin_validators import length_check
 from forms import InviteForm
 
 
@@ -44,7 +45,17 @@ class AdminUser(AccessMIXIN, ModelView):
 
     can_create = False
 
+    form_args = dict(
+        login=dict(validators=[length_check, ]),
+        invite=dict(validators=[length_check, ]),
+    )
+
 
 class AdminInvite(AccessMIXIN, ModelView):
     column_searchable_list = ('email', 'invite', )
     can_create = False
+
+    form_args = dict(
+        invite=dict(validators=[length_check, ]),
+        email=dict(validators=[length_check, ]),
+    )
