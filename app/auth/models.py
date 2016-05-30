@@ -70,7 +70,7 @@ class User(UserMixin, CRUDMixin, db.Model):
 
     @staticmethod
     def hash_password(password):
-        return generate_password_hash(password)
+        return unicode(generate_password_hash(password))
 
     def verify_password(self, password):
         return check_password_hash(self.password, password)
@@ -96,6 +96,7 @@ class User(UserMixin, CRUDMixin, db.Model):
 
     @staticmethod
     def set_admin(login, password):
+        login = unicode(login)
         admin = User.query.filter_by(login=login).first()
         if admin:
             admin.update(password=User.hash_password(password), admin=True)
